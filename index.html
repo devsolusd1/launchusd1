@@ -1,13 +1,82 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Launch USD1</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <h1>🚀 Launch USD1</h1>
-    <p>Bem-vindo ao meu site!</p>
-    <script src="script.js"></script>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Launch USD1</title>
+  <meta name="description" content="USD1-based launchpad demo on Solana"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="/">
+        <img src="/assets/logo-eagle.svg" alt="USD1" class="brand__logo" />
+        <span class="brand__name">Launch on USD1</span>
+      </a>
+
+      <nav class="actions">
+        <a id="connectButton" href="#" class="btn btn--primary">Connect Wallet</a>
+        </button>
+        <div id="menuBox" class="menuBox" aria-hidden="true">
+          <a href="#featured" class="menuItem">Featured</a>
+          <a href="#about" class="menuItem">About</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="heroUSA">
+    <div class="wrap">
+      <div class="heroUSA__card">
+        <div class="heroUSA__bg"></div>
+        <div class="heroUSA__content">
+          <div class="heroUSA__emblem">
+            <img src="/assets/logo-eagle.svg" alt="USD1" />
+          </div>
+          <h1>Launch on USD1</h1>
+          <p>A bold leap into Solana America's Launchpad. Discover, list and showcase early USD1 tokens.</p>
+          <div class="heroUSA__cta">
+            <a href="#featured" class="btn btn--primary">Explore Tokens</a>
+            <a href="https://x.com/LaunchUSD1fun" target="_blank" class="btn btn--ghost" rel="noopener">Follow on X</a>
+          </div>
+          <div class="heroUSA__chips">
+            <span class="chip">🇺🇸 USD1-based</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="featured" class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Featured Tokens</h2>
+        <div class="toolbar">
+          <div class="search">
+            <input id="search" type="text" placeholder="Search tokens…"/>
+            <span class="kbd">/</span>
+          </div>
+          <div class="tabs">
+            <button class="tab is-active" data-filter="featured" aria-pressed="true">Featured</button>
+            <button class="tab" data-filter="new" aria-pressed="false">New</button>
+            <button class="tab" data-filter="all" aria-pressed="false">All Tokens</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="grid" class="grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <div class="wrap">
+      <h3>About</h3>
+      <p>Launch your favorite tokens now paired with USD1. Creator rewards enabled.</p>
+    </div>
+  </section>
+
+  <footer class="footer">© <span id="year"></span> launchusd1.fun</footer>
+  <script src="script.js"></script>
+</body>
 </html>
