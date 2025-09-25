@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@raydium-io/raydium-sdk-v2": "^0.2.29-alpha",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
+    "@vercel/kv": "^3.0.0",
+    "bn.js": "^5.2.2",
+    "bs58": "^6.0.0",
+    "dotenv": "^17.2.2",
+    "web3.storage": "^4.5.5"
+  }
+}

@@ -4,8 +4,38 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Launch USD1</title>
-  <meta name="description" content="USD1-based launchpad demo on Solana"/>
+  <meta name="description" content="USD1-based launchpad on Solana"/>
   <link rel="stylesheet" href="style.css"/>
+  <style>
+    .spotlight { padding: 22px 0 6px; }
+    .spotlight__wrap { width: min(1180px, 92%); margin: 0 auto 8px; }
+    .token-card--spotlight {
+      background:
+        radial-gradient(600px 180px at 10% -40px, rgba(255,215,0,.10), transparent 60%),
+        radial-gradient(600px 180px at 90% 140%, rgba(255,215,0,.08), transparent 60%),
+        rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,215,0,.35);
+      box-shadow: 0 16px 40px rgba(0,0,0,.30), inset 0 0 0 1px rgba(255,215,0,.08);
+    }
+    .token-card--spotlight .token-logo {
+      border-color: rgba(255,215,0,.45);
+      box-shadow: 0 10px 26px rgba(0,0,0,.35), 0 0 0 2px rgba(255,215,0,.15) inset;
+    }
+    .token-card--spotlight .token-ca-badge {
+      border-color: rgba(255,215,0,.35);
+      background: rgba(255,215,0,.10);
+      color: #f6f3e7;
+    }
+    .token-card--spotlight .label {
+      color: #f0e6c0;
+      opacity: .85;
+    }
+    .token-card--spotlight .token-mc-value {
+      color: #ffe28a;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+  </style>
 </head>
 <body>
   <header class="topbar">
@@ -14,14 +44,11 @@
         <img src="/assets/logo-eagle.svg" alt="USD1" class="brand__logo" />
         <span class="brand__name">Launch on USD1</span>
       </a>
-
       <nav class="actions">
-        <a id="connectButton" href="#" class="btn btn--primary">Connect Wallet</a>
-        </button>
-        <div id="menuBox" class="menuBox" aria-hidden="true">
-          <a href="#featured" class="menuItem">Featured</a>
-          <a href="#about" class="menuItem">About</a>
-        </div>
+        <button id="connectWallet" class="btn btn--primary">Connect Wallet</button>
+        <span id="walletAddr" class="wallet-addr" style="display:none"></span>
+        <button id="createTokenBtn" class="btn btn--soft btn--sm" style="display:none">Create Token</button>
+        <button id="disconnectWallet" class="btn btn--soft btn--sm" style="display:none">Disconnect</button>
       </nav>
     </div>
   </header>
@@ -48,6 +75,31 @@
     </div>
   </section>
 
+  <section class="spotlight" aria-labelledby="spotlightTitle">
+    <div class="spotlight__wrap">
+      <h2 id="spotlightTitle" style="margin:0 0 10px; font-size:1.25rem; font-weight:800; letter-spacing:.2px;">Spotlight</h2>
+      <div id="spotlightCard" class="token-card token-card--spotlight">
+        <div class="token-logo-wrap">
+          <img id="spotlightImg" class="token-logo" src="/assets/logo-eagle.png" alt="Spotlight Token"/>
+        </div>
+        <div class="token-meta">
+          <div class="token-title">
+            <span id="spotlightName" class="token-name">LaunchUSD1 Spotlight</span>
+            <span id="spotlightSymbol" class="token-symbol">(USD1)</span>
+          </div>
+          <div class="token-ca-row">
+            <span id="spotlightCA" class="token-ca-badge">wyjLHT…ptUSD1</span>
+            <button id="spotlightCopy" class="btn btn--ghost btn--sm" data-ca="wyjLHT5JHYWiwTgjSqKQroBXiJ9SPntyTgUiBptUSD1">Copy</button>
+          </div>
+          <div class="token-mc">
+            <span class="label">Market Cap:</span>
+            <span id="spotlightMc" class="token-mc-value">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="featured" class="section">
     <div class="wrap">
       <div class="section__head">
@@ -55,17 +107,20 @@
         <div class="toolbar">
           <div class="search">
             <input id="search" type="text" placeholder="Search tokens…"/>
-            <span class="kbd">/</span>
           </div>
-          <div class="tabs">
+          <div class="tabs" id="tabs">
             <button class="tab is-active" data-filter="featured" aria-pressed="true">Featured</button>
             <button class="tab" data-filter="new" aria-pressed="false">New</button>
             <button class="tab" data-filter="all" aria-pressed="false">All Tokens</button>
           </div>
         </div>
       </div>
-
       <div id="grid" class="grid" aria-live="polite"></div>
+      <div class="pager" style="margin-top:12px; display:flex; gap:8px; justify-content:center; align-items:center;">
+        <button id="pagePrev" class="btn btn--ghost btn--sm" disabled>Prev</button>
+        <span id="pageLabel">1</span>
+        <button id="pageNext" class="btn btn--ghost btn--sm" disabled>Next</button>
+      </div>
     </div>
   </section>
 
@@ -77,6 +132,108 @@
   </section>
 
   <footer class="footer">© <span id="year"></span> launchusd1.fun</footer>
+
+    <div id="modalCreateToken" class="modal modal--sheet" aria-hidden="true">
+    <div class="modal__panel">
+      <div class="modal__header">
+        <h3 class="modal__title">Create Token</h3>
+        <button id="closeCreateToken" class="btn btn--ghost btn--sm">Close</button>
+      </div>
+
+      <div class="modal__content">
+        <label class="dz">
+          <input type="file" id="ctImageFile" accept="image/*" class="sr-only" />
+          <div class="dz__box">
+            <div class="dz__icon" aria-hidden="true">📷</div>
+            <div class="dz__title">Token Image (Max 5MB)</div>
+            <div class="dz__hint">Drop or click to select</div>
+          </div>
+        </label>
+
+        <div class="modal__divider"></div>
+
+        <div class="field">
+          <label class="field__label" for="ctName">Name</label>
+          <input id="ctName" type="text" class="field__input" placeholder="My Awesome Token" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="ctSymbol">Ticker</label>
+          <input id="ctSymbol" type="text" class="field__input" placeholder="MAT" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="ctBuyAmount">Buy amount (in USD1)</label>
+          <input id="ctBuyAmount" type="number" step="any" class="field__input" placeholder="e.g., 100" />
+        </div>
+
+        <details class="adv">
+          <summary>Advanced</summary>
+          <div class="field">
+            <label class="field__label" for="ctImage">Image URL (ipfs:// or https://)</label>
+            <input id="ctImage" type="url" class="field__input" placeholder="ipfs://CID or https://gateway/ipfs/CID" />
+          </div>
+        </details>
+      </div>
+
+      <div class="modal__footer">
+        <button id="cancelCreateToken" class="btn btn--ghost">Cancel</button>
+        <button id="submitCreateToken" class="btn btn--primary" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
   <script src="script.js"></script>
+  <script>
+    (function () {
+      const mint = "wyjLHT5JHYWiwTgjSqKQroBXiJ9SPntyTgUiBptUSD1";
+      const $id = (x) => document.getElementById(x);
+      const elMc = $id("spotlightMc");
+      const elName = $id("spotlightName");
+      const elSym = $id("spotlightSymbol");
+      const elCA = $id("spotlightCA");
+      const elCopy = $id("spotlightCopy");
+      const elImg = $id("spotlightImg");
+
+      function fmtUSD(n) {
+        try { return Number(n).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }); }
+        catch { return "$" + n; }
+      }
+
+      try {
+        elCA.textContent = mint.slice(0, 6) + "…" + mint.slice(-6);
+        elCopy.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(mint); } catch {}
+          const prev = elCopy.textContent;
+          elCopy.textContent = "Copied!";
+          elCopy.classList.add("success");
+          setTimeout(() => { elCopy.textContent = prev; elCopy.classList.remove("success"); }, 1200);
+        });
+      } catch {}
+
+      async function refreshSpotlight() {
+        try {
+          if (typeof fetchInfoFor !== "function") return;
+          const info = await fetchInfoFor(mint);
+          if (!info) return;
+
+          if (info.name) elName.textContent = info.name;
+          if (info.symbol) elSym.textContent = "(" + info.symbol + ")";
+          if (typeof info.marketCap === "number") elMc.textContent = fmtUSD(info.marketCap);
+
+          if (info.image) {
+            try {
+              const url = (typeof toHttpImage === "function") ? toHttpImage(info.image) : info.image;
+              if (url) elImg.src = url;
+            } catch {}
+          }
+        } catch {}
+      }
+
+      refreshSpotlight();
+      setInterval(refreshSpotlight, 30000);
+    })();
+  </script>
 </body>
 </html>
