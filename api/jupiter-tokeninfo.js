@@ -1,5 +1,4 @@
-
-const JUP_BASE = process.env.JUP_API_BASE || "https://lite-api.jup.ag"; 
+const JUP_BASE = process.env.JUP_API_BASE || "https://lite-api.jup.ag";
 const TOKEN_SEARCH_URL = `${JUP_BASE}/tokens/v2/search`;
 
 const fs = require("node:fs/promises");
@@ -29,12 +28,12 @@ async function readTokensJSON() {
 }
 
 async function jupFetch(url, retries = 3) {
-  const res = await fetch(url, {
-    headers: { accept: "application/json" },
-  });
+  const res = await fetch(url, { headers: { accept: "application/json" } });
   if (res.ok) return res.json();
   if (retries > 0 && (res.status === 429 || res.status >= 500)) {
-    await new Promise((r) => setTimeout(r, (4 - retries) * 400 + Math.floor(Math.random() * 250)));
+    await new Promise((r) =>
+      setTimeout(r, (4 - retries) * 400 + Math.floor(Math.random() * 250))
+    );
     return jupFetch(url, retries - 1);
   }
   const text = await res.text().catch(() => "");
@@ -47,17 +46,25 @@ async function getTokenInfoByMints(mints) {
     try {
       const url = `${TOKEN_SEARCH_URL}?query=${encodeURIComponent(mint)}`;
       const data = await jupFetch(url);
-      const hit = Array.isArray(data?.data) ? data.data.find((t) => t?.address === mint) : null;
+      const hit = Array.isArray(data?.data)
+        ? data.data.find((t) => t?.address === mint)
+        : null;
       if (!hit) {
-        out[mint] = { mint, name: null, symbol: null, logoURI: null, marketCap: null };
+        out[mint] = {
+          mint,
+          name: null,
+          symbol: null,
+          logoURI: null,
+          marketCap: null,
+        };
         continue;
       }
       const mc =
         hit.marketCap && typeof hit.marketCap === "object"
           ? hit.marketCap.usd ?? null
           : typeof hit.marketCap === "number"
-          ? hit.marketCap
-          : null;
+            ? hit.marketCap
+            : null;
 
       out[mint] = {
         mint,
@@ -67,7 +74,14 @@ async function getTokenInfoByMints(mints) {
         marketCap: mc,
       };
     } catch (e) {
-      out[mint] = { mint, name: null, symbol: null, logoURI: null, marketCap: null, error: String(e?.message || e) };
+      out[mint] = {
+        mint,
+        name: null,
+        symbol: null,
+        logoURI: null,
+        marketCap: null,
+        error: String(e?.message || e),
+      };
     }
   }
   return out;
@@ -85,9 +99,9 @@ function jsonError(res, status, message, extra = {}) {
 }
 
 module.exports = async (req, res) => {
-  // CORS básico
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    const ORIGIN = process.env.ALLOWED_ORIGIN || "https://launchusd1.fun";
+    res.setHeader("Access-Control-Allow-Origin", ORIGIN);
     res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "content-type");
     res.statusCode = 200;
@@ -106,14 +120,17 @@ module.exports = async (req, res) => {
     const fromFile = await readTokensJSON();
     ids = unique([...(ids || []), ...fromFile]);
 
-    if (!ids.length) return jsonError(res, 400, "Informe ?ids=<mint,...> ou preencha tokens.json (array de CAs).");
+    if (!ids.length)
+      return jsonError(res, 400, "Provide ?ids=<mint,...> or fill tokens.json with an array of mints.");
 
     const metaMap = await getTokenInfoByMints(ids);
     const out = ids.map((mint) => metaMap[mint] || { mint });
 
     return json(res, 200, { ok: true, count: out.length, data: out });
   } catch (err) {
-    console.error("/api/jupiter-price.js error:", err);
-    return jsonError(res, 500, "Falha ao consultar Jupiter Token API v2.", { details: String(err?.message || err) });
+    console.error("/api/jupiter-tokeninfo.js error:", err);
+    return jsonError(res, 500, "Failed to fetch Jupiter Token API v2.", {
+      details: String(err?.message || err),
+    });
   }
 };

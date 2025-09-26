@@ -1,42 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Launch USD1</title>
-  <meta name="description" content="USD1-based launchpad on Solana"/>
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="description" content="USD1-based launchpad on Solana" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    .spotlight { padding: 22px 0 6px; }
-    .spotlight__wrap { width: min(1180px, 92%); margin: 0 auto 8px; }
+    .spotlight {
+      padding: 22px 0 6px;
+    }
+
+    .spotlight__wrap {
+      width: min(1180px, 92%);
+      margin: 0 auto 8px;
+    }
+
     .token-card--spotlight {
       background:
-        radial-gradient(600px 180px at 10% -40px, rgba(255,215,0,.10), transparent 60%),
-        radial-gradient(600px 180px at 90% 140%, rgba(255,215,0,.08), transparent 60%),
-        rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,215,0,.35);
-      box-shadow: 0 16px 40px rgba(0,0,0,.30), inset 0 0 0 1px rgba(255,215,0,.08);
+        radial-gradient(600px 180px at 10% -40px, rgba(255, 215, 0, .10), transparent 60%),
+        radial-gradient(600px 180px at 90% 140%, rgba(255, 215, 0, .08), transparent 60%),
+        rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 215, 0, .35);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .30), inset 0 0 0 1px rgba(255, 215, 0, .08);
     }
+
     .token-card--spotlight .token-logo {
-      border-color: rgba(255,215,0,.45);
-      box-shadow: 0 10px 26px rgba(0,0,0,.35), 0 0 0 2px rgba(255,215,0,.15) inset;
+      border-color: rgba(255, 215, 0, .45);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, .35), 0 0 0 2px rgba(255, 215, 0, .15) inset;
     }
+
     .token-card--spotlight .token-ca-badge {
-      border-color: rgba(255,215,0,.35);
-      background: rgba(255,215,0,.10);
+      border-color: rgba(255, 215, 0, .35);
+      background: rgba(255, 215, 0, .10);
       color: #f6f3e7;
     }
+
+
     .token-card--spotlight .label {
       color: #f0e6c0;
       opacity: .85;
     }
+
     .token-card--spotlight .token-mc-value {
       color: #ffe28a;
       font-weight: 800;
       letter-spacing: .2px;
     }
+
+    .btn--claim {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+      font-size: .9rem;
+      background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);
+      color: #1b1b1b;
+      border: 1px solid rgba(0, 0, 0, .12);
+      box-shadow: 0 6px 22px rgba(255, 179, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .35);
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+      animation: ring 2.4s ease-out infinite;
+    }
+
+    .btn--claim:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .btn--claim:active {
+      transform: translateY(0);
+    }
+
+    .btn--claim .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: .75rem;
+      line-height: 1;
+      background: rgba(0, 0, 0, .15);
+      border: 1px solid rgba(0, 0, 0, .18);
+    }
+
+    @keyframes ring {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, .50);
+      }
+
+      70% {
+        box-shadow: 0 0 0 14px rgba(255, 215, 0, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .btn--claim {
+        padding: 9px 12px;
+        font-size: .85rem;
+        gap: 8px;
+      }
+
+      .btn--claim .badge {
+        padding: 2px 6px;
+        font-size: .7rem;
+      }
+    }
+
+    .hero-notice {
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 215, 0, .12);
+      border: 1px solid rgba(255, 215, 0, .35);
+      color: #ffe28a;
+      font-weight: 600;
+    }
+
+    .hero-notice strong {
+      color: #fff0b3;
+    }
   </style>
 </head>
+
 <body>
   <header class="topbar">
     <div class="wrap nav">
@@ -48,6 +141,12 @@
         <button id="connectWallet" class="btn btn--primary">Connect Wallet</button>
         <span id="walletAddr" class="wallet-addr" style="display:none"></span>
         <button id="createTokenBtn" class="btn btn--soft btn--sm" style="display:none">Create Token</button>
+        <button id="claimCreatorFeesBtn" class="btn btn--claim" style="display:none"
+          title="Claim your 0.5% creator fees">
+          ✨ Claim creator fees <span class="badge">0.5%</span>
+        </button>
+
+
         <button id="disconnectWallet" class="btn btn--soft btn--sm" style="display:none">Disconnect</button>
       </nav>
     </div>
@@ -66,9 +165,14 @@
           <div class="heroUSA__cta">
             <a href="#featured" class="btn btn--primary">Explore Tokens</a>
             <a href="https://x.com/LaunchUSD1fun" target="_blank" class="btn btn--ghost" rel="noopener">Follow on X</a>
+
           </div>
+          <p class="hero-notice" id="creatorFeesNotice" role="note" aria-live="polite">
+            Creator fees updated to <strong>0.5%</strong> + CPMM LP fees after migration
+          </p>
+
           <div class="heroUSA__chips">
-            <span class="chip">🇺🇸 USD1-based</span>
+            <span class="chip" role="note" aria-live="polite">Claim instantly!</span>
           </div>
         </div>
       </div>
@@ -77,10 +181,11 @@
 
   <section class="spotlight" aria-labelledby="spotlightTitle">
     <div class="spotlight__wrap">
-      <h2 id="spotlightTitle" style="margin:0 0 10px; font-size:1.25rem; font-weight:800; letter-spacing:.2px;">Spotlight</h2>
+      <h2 id="spotlightTitle" style="margin:0 0 10px; font-size:1.25rem; font-weight:800; letter-spacing:.2px;">
+        Spotlight</h2>
       <div id="spotlightCard" class="token-card token-card--spotlight">
         <div class="token-logo-wrap">
-          <img id="spotlightImg" class="token-logo" src="/assets/logo-eagle.png" alt="Spotlight Token"/>
+          <img id="spotlightImg" class="token-logo" src="/assets/logo-eagle.png" alt="Spotlight Token" />
         </div>
         <div class="token-meta">
           <div class="token-title">
@@ -89,7 +194,8 @@
           </div>
           <div class="token-ca-row">
             <span id="spotlightCA" class="token-ca-badge">wyjLHT…ptUSD1</span>
-            <button id="spotlightCopy" class="btn btn--ghost btn--sm" data-ca="wyjLHT5JHYWiwTgjSqKQroBXiJ9SPntyTgUiBptUSD1">Copy</button>
+            <button id="spotlightCopy" class="btn btn--ghost btn--sm"
+              data-ca="wyjLHT5JHYWiwTgjSqKQroBXiJ9SPntyTgUiBptUSD1">Copy</button>
           </div>
           <div class="token-mc">
             <span class="label">Market Cap:</span>
@@ -106,7 +212,7 @@
         <h2>Featured Tokens</h2>
         <div class="toolbar">
           <div class="search">
-            <input id="search" type="text" placeholder="Search tokens…"/>
+            <input id="search" type="text" placeholder="Search tokens…" />
           </div>
           <div class="tabs" id="tabs">
             <button class="tab is-active" data-filter="featured" aria-pressed="true">Featured</button>
@@ -133,7 +239,7 @@
 
   <footer class="footer">© <span id="year"></span> launchusd1.fun</footer>
 
-    <div id="modalCreateToken" class="modal modal--sheet" aria-hidden="true">
+  <div id="modalCreateToken" class="modal modal--sheet" aria-hidden="true">
     <div class="modal__panel">
       <div class="modal__header">
         <h3 class="modal__title">Create Token</h3>
@@ -204,13 +310,13 @@
       try {
         elCA.textContent = mint.slice(0, 6) + "…" + mint.slice(-6);
         elCopy.addEventListener("click", async () => {
-          try { await navigator.clipboard.writeText(mint); } catch {}
+          try { await navigator.clipboard.writeText(mint); } catch { }
           const prev = elCopy.textContent;
           elCopy.textContent = "Copied!";
           elCopy.classList.add("success");
           setTimeout(() => { elCopy.textContent = prev; elCopy.classList.remove("success"); }, 1200);
         });
-      } catch {}
+      } catch { }
 
       async function refreshSpotlight() {
         try {
@@ -226,9 +332,9 @@
             try {
               const url = (typeof toHttpImage === "function") ? toHttpImage(info.image) : info.image;
               if (url) elImg.src = url;
-            } catch {}
+            } catch { }
           }
-        } catch {}
+        } catch { }
       }
 
       refreshSpotlight();
@@ -236,4 +342,5 @@
     })();
   </script>
 </body>
+
 </html>

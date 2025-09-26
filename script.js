@@ -5,6 +5,7 @@ const btnConnect = $("#connectWallet");
 const btnDisconnect = $("#disconnectWallet");
 const btnCreate = $("#createTokenBtn");
 const badgeAddr = $("#walletAddr");
+const btnClaim = $("#claimCreatorFeesBtn");
 
 const modalCreate = $("#modalCreateToken");
 const closeCreate = $("#closeCreateToken");
@@ -198,6 +199,7 @@ async function ensureWallet() {
     btnConnect.textContent = "Connected";
     btnCreate.style.display = "inline-block";
     btnDisconnect.style.display = "inline-block";
+    if (btnClaim) btnClaim.style.display = "inline-block";
   }
   return wallet;
 }
@@ -209,7 +211,49 @@ btnDisconnect?.addEventListener("click", async () => {
   btnConnect.textContent = "Connect Wallet";
   btnCreate.style.display = "none";
   btnDisconnect.style.display = "none";
+  if (btnClaim) btnClaim.style.display = "none"; 
 });
+btnClaim?.addEventListener("click", async () => {
+  try {
+    const w = await ensureWallet();
+    if (!w?.publicKey) return;
+
+    btnClaim.disabled = true;
+    const prev = btnClaim.textContent;
+    btnClaim.textContent = "Claiming…";
+
+    const r = await fetch("/api/claim-creator-fee", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ payer: wallet.publicKey.toBase58() })
+    });
+    const j = await r.json();
+
+    if (!j.ok) {
+      if (j.reason === "not-eligible") {
+        alert("This wallet hasn't deployed any token on this site. Claim not allowed.");
+      } else if (j.reason === "nothing-to-claim") {
+        alert("No creator fees available to claim.");
+      } else {
+        alert(j.error || "Claim failed.");
+      }
+      return;
+    }
+
+    const txs = j.txsBase64 || (j.txBase64 ? [j.txBase64] : []);
+    if (!txs.length) { alert("No transaction to sign."); return; }
+
+    const sigs = await sendTxsBase64Sequential(txs, wallet);
+    alert("Creator fees claimed!\n" + sigs.join("\n"));
+  } catch (e) {
+    console.error(e);
+    alert(String(e?.message || e));
+  } finally {
+    btnClaim.disabled = false;
+    btnClaim.textContent = "Claim creator fees";
+  }
+});
+
 
 function openCreateModal() {
   modalCreate.classList.add("is-open");
