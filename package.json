@@ -1,6 +1,6 @@
 {
   "name": "launchusd1",
-  "private": true,
+  "private": false,
   "type": "module",
   "engines": {
     "node": ">=18 <25"
