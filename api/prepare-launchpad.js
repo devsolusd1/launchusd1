@@ -26,7 +26,7 @@ const ENV = {
   USD1_MINT: (process.env.USD1_MINT || "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB").trim(),
   PINATA_GATEWAY: (process.env.PINATA_GATEWAY || "https://coffee-bright-lungfish-824.mypinata.cloud/ipfs").trim(),
   CREATED_ON: (process.env.CREATED_ON || "launchusd1.fun").trim(),
-  RAYDIUM_PLATFORM_ID: (process.env.RAYDIUM_PLATFORM_ID || "3vi57Uhk2VPvPFPobXWV4Ni3JPAZTMV9onfojodTCwvw").trim(),
+  RAYDIUM_PLATFORM_ID: (process.env.RAYDIUM_PLATFORM_ID || "Aw6YeyBLS8DezH3nigshkisj91vmvdaE4jyajZJNVNtW").trim(),
   MINTPOOL_KEY: process.env.MINTPOOL_KEY || "usd1:mintpool",
 };
 
