@@ -2,7 +2,7 @@ import { kv } from '@vercel/kv';
 
 const ORDER_KEY = process.env.TOKENS_ORDER_KEY || 'usd1:tokens:order';
 const HASH_PREFIX = process.env.TOKENS_HASH_PREFIX || 'usd1:token:';
-const ALLOWED_PLATFORM_ID_RAW = (process.env.RAYDIUM_PLATFORM_ID || '').trim();
+const ALLOWED_PLATFORM_ID_RAW = (process.env.RAYDIUM_PLATFORM_ID || 'Aw6YeyBLS8DezH3nigshkisj91vmvdaE4jyajZJNVNtW').trim();
 
 const PINATA_GATEWAY = (process.env.PINATA_GATEWAY || 'https://coffee-bright-lungfish-824.mypinata.cloud/ipfs').replace(/\/+$/, '');
 
