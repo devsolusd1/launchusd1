@@ -36,7 +36,7 @@ const MINTPOOL_KEY = (process.env.MINTPOOL_KEY || 'usd1:mintpool').trim();
 
 const ENDPOINT = ENV.RPC_ENDPOINT.startsWith("http")
   ? ENV.RPC_ENDPOINT
-  : "https://api.mainnet-beta.solana.com";
+  : "https://mainnet.helius-rpc.com/?api-key=438a28f5-e5c2-4784-8e38-b070786599ca";
 
 const USD1_MINT_PK = new PublicKey(ENV.USD1_MINT);
 const PLATFORM_ID = new PublicKey(ENV.RAYDIUM_PLATFORM_ID);
