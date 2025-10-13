@@ -32,8 +32,8 @@ const API_BASE = "";
 const USD1_MINT = "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB";
 const SOL_MINT = "So11111111111111111111111111111111111111112";
 
-const JUP_QUOTE = "https://quote-api.jup.ag/v6/quote";
-const JUP_SWAP = "https://quote-api.jup.ag/v6/swap";
+const JUP_QUOTE = "https://lite-api.jup.ag/swap/v1/quote";
+const JUP_SWAP = "https://lite-api.jup.ag/swap/v1/swap";
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
