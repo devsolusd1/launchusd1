@@ -124,7 +124,7 @@ async function pinJsonToIPFS(obj) {
   });
   if (!r.ok) throw new Error(`Pinata JSON failed ${r.status}`);
   const j = await r.json();
-  return 'https://coffee-bright-lungfish-824.mypinata.cloud/' + j.IpfsHash;
+  return 'https://coffee-bright-lungfish-824.mypinata.cloud/ipfs/' + j.IpfsHash;
 }
 
 export default async function handler(req, res) {
