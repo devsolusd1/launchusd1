@@ -492,7 +492,7 @@ function renderPage() {
     GRID.innerHTML = `<div class="empty">No tokens found.</div>`;
   } else {
     for (const t of pageRows) {
-      const displayedCA = truncateMiddle(t.mint, 3, 4);
+      const displayedCA = truncateMiddle(t.mint, 4, 4);
       const card = document.createElement("div");
       card.className = "token-card";
       card.innerHTML = `
@@ -501,29 +501,19 @@ function renderPage() {
         </div>
         <div class="token-meta">
           <div class="token-title">
-            <span class="token-name">${escapeHTML(t.name || "—")}</span>
-            <span class="token-symbol">${t.symbol ? "(" + escapeHTML(t.symbol) + ")" : ""}</span>
+            <span class="token-name">${escapeHTML(t.name || "\u2014")}</span>
+            <span class="token-symbol">${t.symbol ? escapeHTML(t.symbol) : ""}</span>
           </div>
           <div class="token-ca-row">
             <span class="token-ca-badge">${escapeHTML(displayedCA)}</span>
             <button class="btn btn--ghost btn--sm copy-ca-btn" data-ca="${escapeHTML(t.mint)}">Copy</button>
           </div>
           <div class="token-mc">
-            <span class="label">Market Cap:</span>
+            <span class="label">MCap</span>
             <span class="token-mc-value">${fmtMoney(t.marketCap)}</span>
           </div>
         </div>
       `;
-      GRID?.addEventListener("click", async (e) => {
-        const btn = e.target.closest(".copy-ca-btn");
-        if (!btn) return;
-        const ca = btn.getAttribute("data-ca") || "";
-        try { await navigator.clipboard.writeText(ca); } catch {}
-        const prev = btn.textContent;
-        btn.textContent = "Copied!";
-        btn.classList.add("success");
-        setTimeout(() => { btn.textContent = prev; btn.classList.remove("success"); }, 1200);
-      });
       GRID.appendChild(card);
     }
   }
@@ -531,6 +521,18 @@ function renderPage() {
   pagePrev.disabled = CURRENT_PAGE <= 1;
   pageNext.disabled = CURRENT_PAGE >= maxPage;
 }
+
+// Delegated click handler for copy buttons (attached once)
+GRID?.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".copy-ca-btn");
+  if (!btn) return;
+  const ca = btn.getAttribute("data-ca") || "";
+  try { await navigator.clipboard.writeText(ca); } catch {}
+  const prev = btn.textContent;
+  btn.textContent = "Copied!";
+  btn.classList.add("success");
+  setTimeout(() => { btn.textContent = prev; btn.classList.remove("success"); }, 1200);
+});
 
 async function reloadAndRenderCurrentTab() {
   let list = await fetchAllTokens();
