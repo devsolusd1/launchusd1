@@ -9,127 +9,6 @@
 
   <meta name="description" content="USD1-based launchpad on Solana" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .spotlight {
-      padding: 22px 0 6px;
-    }
-
-    .spotlight__wrap {
-      width: min(1180px, 92%);
-      margin: 0 auto 8px;
-    }
-
-    .token-card--spotlight {
-      background:
-        radial-gradient(600px 180px at 10% -40px, rgba(255, 215, 0, .10), transparent 60%),
-        radial-gradient(600px 180px at 90% 140%, rgba(255, 215, 0, .08), transparent 60%),
-        rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 215, 0, .35);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, .30), inset 0 0 0 1px rgba(255, 215, 0, .08);
-    }
-
-    .token-card--spotlight .token-logo {
-      border-color: rgba(255, 215, 0, .45);
-      box-shadow: 0 10px 26px rgba(0, 0, 0, .35), 0 0 0 2px rgba(255, 215, 0, .15) inset;
-    }
-
-    .token-card--spotlight .token-ca-badge {
-      border-color: rgba(255, 215, 0, .35);
-      background: rgba(255, 215, 0, .10);
-      color: #f6f3e7;
-    }
-
-
-    .token-card--spotlight .label {
-      color: #f0e6c0;
-      opacity: .85;
-    }
-
-    .token-card--spotlight .token-mc-value {
-      color: #ffe28a;
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-
-    .btn--claim {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      text-transform: uppercase;
-      font-size: .9rem;
-      background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);
-      color: #1b1b1b;
-      border: 1px solid rgba(0, 0, 0, .12);
-      box-shadow: 0 6px 22px rgba(255, 179, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .35);
-      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
-      animation: ring 2.4s ease-out infinite;
-    }
-
-    .btn--claim:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-    }
-
-    .btn--claim:active {
-      transform: translateY(0);
-    }
-
-    .btn--claim .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: .75rem;
-      line-height: 1;
-      background: rgba(0, 0, 0, .15);
-      border: 1px solid rgba(0, 0, 0, .18);
-    }
-
-    @keyframes ring {
-      0% {
-        box-shadow: 0 0 0 0 rgba(255, 215, 0, .50);
-      }
-
-      70% {
-        box-shadow: 0 0 0 14px rgba(255, 215, 0, 0);
-      }
-
-      100% {
-        box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
-      }
-    }
-
-    @media (max-width: 720px) {
-      .btn--claim {
-        padding: 9px 12px;
-        font-size: .85rem;
-        gap: 8px;
-      }
-
-      .btn--claim .badge {
-        padding: 2px 6px;
-        font-size: .7rem;
-      }
-    }
-
-    .hero-notice {
-      margin: 12px 0 0;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(255, 215, 0, .12);
-      border: 1px solid rgba(255, 215, 0, .35);
-      color: #ffe28a;
-      font-weight: 600;
-    }
-
-    .hero-notice strong {
-      color: #fff0b3;
-    }
-  </style>
 </head>
 
 <body>
@@ -183,8 +62,7 @@
 
   <section class="spotlight" aria-labelledby="spotlightTitle">
     <div class="spotlight__wrap">
-      <h2 id="spotlightTitle" style="margin:0 0 10px; font-size:1.25rem; font-weight:800; letter-spacing:.2px;">
-        Spotlight</h2>
+      <h2 id="spotlightTitle">Spotlight</h2>
       <div id="spotlightCard" class="token-card token-card--spotlight">
         <div class="token-logo-wrap">
           <img id="spotlightImg" class="token-logo" src="/assets/logo-eagle.png" alt="Spotlight Token" />
@@ -224,7 +102,7 @@
         </div>
       </div>
       <div id="grid" class="grid" aria-live="polite"></div>
-      <div class="pager" style="margin-top:12px; display:flex; gap:8px; justify-content:center; align-items:center;">
+      <div class="pager">
         <button id="pagePrev" class="btn btn--ghost btn--sm" disabled>Prev</button>
         <span id="pageLabel">1</span>
         <button id="pageNext" class="btn btn--ghost btn--sm" disabled>Next</button>
